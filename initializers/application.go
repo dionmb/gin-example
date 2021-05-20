@@ -4,6 +4,7 @@ import (
 	"gin_example/app"
 	"gin_example/models"
 	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
 	"path"
 	"runtime"
 )
@@ -12,6 +13,8 @@ func Application() *gin.Engine {
 	r := gin.Default()
 
 	setup()
+
+	r.Use(cors.Default())
 
 	Route(r)
 
