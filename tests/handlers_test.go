@@ -34,7 +34,6 @@ func TestReposIndex(t *testing.T) {
 }
 
 func TestReposCreate(t *testing.T) {
-
 	res := test.Post("/api/repos", `{"name": "name"}`)
 
 	assert.Equal(t, 200, res.Code)
