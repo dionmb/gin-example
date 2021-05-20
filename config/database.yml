@@ -1,0 +1,14 @@
+default: &default
+  host: localhost
+  user: admin
+  password: admin
+  dbname: gin_example
+  port: 5432
+  automigrate: true
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  dbname: gin_example_test

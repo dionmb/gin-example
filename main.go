@@ -1,14 +1,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"gin_example/initializers"
 )
 
 func main()  {
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "ok")
-	})
-	r.Run()
+	app := initializers.Application()
+
+	app.Run()
 }
