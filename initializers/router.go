@@ -3,22 +3,31 @@ package initializers
 import (
 	"gin_example/handlers"
 	"gin_example/handlers/api"
+	"gin_example/libs/auth"
 	"github.com/gin-gonic/gin"
 )
 
-func Group(app *gin.Engine, relativePath string, handler func(group *gin.RouterGroup))  {
-	handler(app.Group("/api"))
-}
-
 func Route(app *gin.Engine)  {
+	// auth := auth.Jwt()
+
+
 	app.GET("/", handlers.HomeIndex)
 
-	Group(app, "/api", func(group *gin.RouterGroup) {
-		group.GET("/repos", api.ReposIndex)
-		group.POST("/repos", api.ReposCreate)
-		group.GET("/repos/:id", api.ReposShow)
-		group.PUT("/repos/:id", api.ReposUpdate)
-		group.DELETE("/repos/:id", api.ReposDestroy)
-	})
+	apiGroup := app.Group("/api")
+	{
+		apiGroup.POST("/login", api.Login)
+
+		apiGroup.GET("/repos", api.ReposIndex)
+		apiGroup.POST("/repos", api.ReposCreate)
+		apiGroup.GET("/repos/:id", api.ReposShow)
+		apiGroup.PUT("/repos/:id", api.ReposUpdate)
+		apiGroup.DELETE("/repos/:id", api.ReposDestroy)
+
+		authGroup := apiGroup.Group("")
+		authGroup.Use(auth.JwtMiddleware())
+		{
+			authGroup.GET("/profile", auth.Required, api.Profile)
+		}
+	}
 
 }

@@ -2,12 +2,19 @@ package initializers
 
 import (
 	"gin_example/app"
+	"gin_example/libs/configurations"
 	"gin_example/models"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"path"
 	"runtime"
 )
+
+func loadApplicationConfig() app.ApplicationConfig {
+	var config app.ApplicationConfig
+	configurations.LoadConfig("application", &config)
+	return config
+}
 
 func Application() *gin.Engine {
 	r := gin.Default()
@@ -33,6 +40,7 @@ func setup() {
 
 	_, filename, _, _ := runtime.Caller(1)
 	app.Root = path.Join(path.Dir(filename), "..")
+	app.Config = loadApplicationConfig()
 
-	app.DB = Database(models.Repo{})
+	app.DB = Database(models.Repo{}, models.User{})
 }

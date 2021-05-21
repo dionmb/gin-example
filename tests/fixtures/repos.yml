@@ -1,0 +1,4 @@
+- id: 1
+  owner: gin-gonic
+  name: gin
+  type: github

@@ -1,0 +1,8 @@
+default: &default
+  jwt_secret: secret key
+
+development:
+  <<: *default
+
+test:
+  <<: *default
