@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type DatabaseConfig struct {
+type databaseConfig struct {
 	Host string
 	Port int
 	User string
@@ -16,15 +16,15 @@ type DatabaseConfig struct {
 	AutoMigrate bool
 }
 
-func LoadDatabaseConfig() DatabaseConfig {
-	var config DatabaseConfig
+func loadDatabaseConfig() databaseConfig {
+	var config databaseConfig
 	configurations.LoadConfig("database", &config)
 	return config
 }
 
 
 func Database(models ...interface{}) *gorm.DB {
-	config := LoadDatabaseConfig()
+	config := loadDatabaseConfig()
 	format := "host=%s port=%d user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai"
 	dns := fmt.Sprintf(format, config.Host, config.Port, config.User, config.Password, config.Dbname)
 	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
@@ -34,12 +34,12 @@ func Database(models ...interface{}) *gorm.DB {
 	}
 
 	if config.AutoMigrate {
-		MigrateDatabase(db, models...)
+		migrateDatabase(db, models...)
 	}
 	return db
 }
 
-func MigrateDatabase(db *gorm.DB, models ...interface{})  {
+func migrateDatabase(db *gorm.DB, models ...interface{})  {
 	err := db.AutoMigrate(models...)
 
 	if err != nil {

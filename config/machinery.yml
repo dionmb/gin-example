@@ -1,0 +1,12 @@
+default: &default
+  brokers:
+    - localhost:6379
+  backends:
+    - localhost:6379
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  dbname: gin_example_test

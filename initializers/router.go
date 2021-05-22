@@ -15,6 +15,9 @@ func Route(app *gin.Engine)  {
 	{
 		apiGroup.POST("/login", api.Login)
 
+		apiGroup.POST("/delays", api.DelaysCreate)
+		apiGroup.GET("/delays/:id", api.DelaysShow)
+
 		apiGroup.GET("/repos", api.ReposIndex)
 		apiGroup.POST("/repos", api.ReposCreate)
 		apiGroup.GET("/repos/:id", api.ReposShow)
