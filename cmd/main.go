@@ -7,5 +7,7 @@ import (
 func main()  {
 	app := initializers.Application()
 
+	initializers.Cron()
+
 	app.Run()
 }

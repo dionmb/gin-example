@@ -42,5 +42,5 @@ func setup() {
 	app.Root = path.Join(path.Dir(filename), "..")
 	app.Config = loadApplicationConfig()
 
-	app.DB = Database(models.Repo{}, models.User{})
+	app.DB = Database(models.Repo{}, models.User{}, models.Dashboard{})
 }
