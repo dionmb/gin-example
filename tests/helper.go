@@ -2,16 +2,17 @@ package tests
 
 import (
 	"bytes"
+	"encoding/json"
 	"gin_example/app"
 	"gin_example/initializers"
 	"gin_example/libs/auth"
 	"gin_example/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-testfixtures/testfixtures/v3"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"path"
+	"text/template"
 )
 
 func TestApplication() *gin.Engine {
@@ -33,12 +34,16 @@ func (t *TestEngine) Logout() {
 	t.currentUser = nil
 }
 
-func (t *TestEngine) http(method string, path string, body io.Reader) *httptest.ResponseRecorder {
+func (t *TestEngine) http(method string, path string, data gin.H) *httptest.ResponseRecorder {
+	jsonBytes, err := json.Marshal(data)
+	if err != nil {
+		panic(err)
+	}
 	res := httptest.NewRecorder()
-	req, _ := http.NewRequest(method, path, body)
+	req, _ := http.NewRequest(method, path, bytes.NewBuffer(jsonBytes))
 	req.Header.Set("Content-Type", "application/json")
 	if t.currentUser != nil && t.currentUser.Jti != "" {
-		token, err := auth.GenerateToken(t.currentUser)
+		token, err := t.currentUser.GenerateToken()
 		if err != nil {
 			panic(err)
 		}
@@ -52,12 +57,12 @@ func (t *TestEngine) Get(path string) *httptest.ResponseRecorder {
 	return t.http("GET", path, nil)
 }
 
-func (t *TestEngine) Post(path string, json string) *httptest.ResponseRecorder {
-	return t.http("POST", path, bytes.NewBufferString(json))
+func (t *TestEngine) Post(path string, json gin.H) *httptest.ResponseRecorder {
+	return t.http("POST", path, json)
 }
 
-func (t *TestEngine) Put(path string, json string) *httptest.ResponseRecorder {
-	return t.http("PUT", path, bytes.NewBufferString(json))
+func (t *TestEngine) Put(path string, json gin.H) *httptest.ResponseRecorder {
+	return t.http("PUT", path, json)
 }
 
 func (t *TestEngine) Delete(path string) *httptest.ResponseRecorder {
@@ -72,6 +77,9 @@ func loadFixtures() {
 
 	fixtures, err := testfixtures.New(
 		testfixtures.Template(),
+		testfixtures.TemplateFuncs(template.FuncMap{
+			"EncryptPassword": auth.EncryptPassword,
+		}),
 		testfixtures.Database(db),
 		testfixtures.Dialect("postgres"),
 		testfixtures.Directory(path.Join(app.Root, "tests/fixtures")),
@@ -81,5 +89,8 @@ func loadFixtures() {
 		panic(err)
 	}
 
-	fixtures.Load()
+	err = fixtures.Load()
+	if err != nil {
+		panic(err)
+	}
 }

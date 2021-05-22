@@ -2,7 +2,6 @@ package api
 
 import (
 	"gin_example/app"
-	"gin_example/libs/auth"
 	"gin_example/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -24,15 +23,17 @@ func Login(c *gin.Context) {
 	var user models.User
 	err := app.DB.Where(models.User{
 		Username:       req.Username,
-		PasswordDigest: req.Password,
 	}).First(&user).Error
 
-	if err != nil {
+	if err != nil || !user.VerifyPassword(req.Password) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Username or Password Invalid"})
 		return
 	}
 
-	token, err := auth.GenerateToken(&user)
+
+
+	token, err := user.GenerateToken()
+
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err })
 		return

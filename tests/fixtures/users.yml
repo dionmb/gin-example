@@ -1,9 +1,9 @@
 - id: 1
   username: user1
-  password_digest: password
+  password_digest: {{ EncryptPassword "password" }}
   activated: true
 
 - id: 2
   username: user2
-  password_digest: password
+  password_digest: {{ EncryptPassword "password" }}
   activated: false

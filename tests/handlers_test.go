@@ -3,6 +3,7 @@ package tests
 import (
 	"gin_example/app"
 	"gin_example/models"
+	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -27,7 +28,9 @@ func TestReposIndex(t *testing.T) {
 }
 
 func TestReposCreate(t *testing.T) {
-	res := test.Post("/api/repos", `{"name": "name"}`)
+	res := test.Post("/api/repos", gin.H{
+		"name": "name",
+	})
 	assert.Equal(t, 200, res.Code)
 }
 
@@ -37,7 +40,9 @@ func TestReposShow(t *testing.T) {
 }
 
 func TestReposUpdate(t *testing.T) {
-	res := test.Put("/api/repos/1", `{"name": "name"}`)
+	res := test.Put("/api/repos/1", gin.H{
+		"name": "name",
+	})
 	assert.Equal(t, 200, res.Code)
 }
 
@@ -51,12 +56,20 @@ func TestUnauthorized(t *testing.T) {
 	assert.Equal(t, 401, res.Code)
 }
 
-func TestForbidden(t *testing.T) {
-	var user models.User
-	app.DB.Where("activated != true").First(&user)
+func TestLogin(t *testing.T) {
+	res := test.Post("/api/login", gin.H{
+		"username": "user1",
+		"password": "password",
+	})
+	assert.Equal(t, 200, res.Code)
+}
 
-	res := test.Login(&user).Get("/api/profile")
-	assert.Equal(t, 403, res.Code)
+func TestLoginWithIncorrectPassword(t *testing.T) {
+	res := test.Post("/api/login", gin.H{
+		"username": "user1",
+		"password": "wrong",
+	})
+	assert.Equal(t, 401, res.Code)
 }
 
 func TestProfile(t *testing.T) {

@@ -1,13 +1,13 @@
 package api
 
 import (
-	"gin_example/libs/auth"
+	"gin_example/handlers"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func Profile(c *gin.Context) {
-	user := auth.CurrentUser(c)
+	user := handlers.CurrentUser(c)
 	c.JSON(http.StatusOK, gin.H{
 		"Username": user.Username,
 	})

@@ -8,8 +8,6 @@ import (
 )
 
 func Route(app *gin.Engine)  {
-	// auth := auth.Jwt()
-
 
 	app.GET("/", handlers.HomeIndex)
 
@@ -24,9 +22,9 @@ func Route(app *gin.Engine)  {
 		apiGroup.DELETE("/repos/:id", api.ReposDestroy)
 
 		authGroup := apiGroup.Group("")
-		authGroup.Use(auth.JwtMiddleware())
+		authGroup.Use(auth.JwtMiddleware(handlers.UserProvider))
 		{
-			authGroup.GET("/profile", auth.Required, api.Profile)
+			authGroup.GET("/profile", handlers.Required, api.Profile)
 		}
 	}
 

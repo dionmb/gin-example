@@ -2,7 +2,6 @@ package auth
 
 import (
 	"gin_example/app"
-	"gin_example/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -10,24 +9,14 @@ import (
 	"time"
 )
 
-var identityKey = "currentUser"
+var IdentityKey = "currentUser"
 
-func CurrentUser(c *gin.Context) *models.User {
-	v, ok := c.Get(identityKey)
-
-	if !ok || v == nil {
-		return nil
-	}
-
-	return v.(*models.User)
-}
-
-func GenerateToken(user * models.User) (string, error) {
+func GenerateToken(jti string) (string, error) {
 	key := []byte(app.Config.JwtSecret)
 	expire := time.Now().Add(time.Hour)
 
 	claims := &jwt.StandardClaims{
-		Id: user.Jti,
+		Id: jti,
 		ExpiresAt: expire.Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -40,27 +29,7 @@ func GenerateToken(user * models.User) (string, error) {
 	return ss, nil
 }
 
-func Required(c *gin.Context) {
-	user := CurrentUser(c)
-	if user == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"code": 401,
-			"error": "Authorized Required",
-		})
-		c.Abort()
-		return
-	}
-
-	if !user.Activated {
-		c.JSON(http.StatusForbidden, gin.H{
-			"code": 403,
-			"error": "Limited User",
-		})
-	}
-}
-
-
-func JwtMiddleware() func(c *gin.Context) {
+func JwtMiddleware(UserProvider func(c * gin.Context, claims *jwt.StandardClaims) interface{}) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		token := getTokenFromHeader(c)
 
@@ -79,16 +48,9 @@ func JwtMiddleware() func(c *gin.Context) {
 			return
 		}
 
-		var user models.User
-		if err := app.DB.Where("jti = ?", claims.Id).First(&user); err == nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"code": 401,
-				"error": "User not found",
-			})
-			return
-		}
+		user := UserProvider(c, claims)
 
-		c.Set(identityKey, &user)
+		c.Set(IdentityKey, user)
 	}
 }
 
