@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"gin_example/app"
-	"gin_example/initializers"
-	"gin_example/libs/auth"
-	"gin_example/models"
+	"gin_example/initializer"
+	"gin_example/lib/auth"
+	"gin_example/model"
 	"github.com/gin-gonic/gin"
 	"github.com/go-testfixtures/testfixtures/v3"
 	"net/http"
@@ -17,15 +17,15 @@ import (
 
 func TestApplication() *gin.Engine {
 	gin.SetMode(gin.TestMode)
-	return initializers.Application()
+	return initializer.Application()
 }
 
 type TestEngine struct {
 	router *gin.Engine
-	currentUser *models.User
+	currentUser *model.User
 }
 
-func (t *TestEngine) Login(user *models.User) *TestEngine {
+func (t *TestEngine) Login(user *model.User) *TestEngine {
 	t.currentUser = user
 	return t
 }

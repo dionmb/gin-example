@@ -1,9 +1,9 @@
-package initializers
+package initializer
 
 import (
 	"gin_example/app"
-	"gin_example/delays"
-	"gin_example/libs/configurations"
+	"gin_example/job/delay_job"
+	"gin_example/lib/configuration"
 	"github.com/RichardKnop/machinery/v2"
 	redisbackend "github.com/RichardKnop/machinery/v2/backends/redis"
 	redisbroker "github.com/RichardKnop/machinery/v2/brokers/redis"
@@ -19,14 +19,14 @@ type machineryConfig struct {
 
 func loadMachineryConfig() machineryConfig {
 	var config machineryConfig
-	configurations.LoadConfig("machinery", &config)
+	configuration.LoadConfig("machinery", &config)
 	return config
 }
 
 
 func registerTasks(server * machinery.Server)  {
 	tasks := map[string]interface{}{
-	"CountUsers" : delays.CountUsers,
+	"CountUsers" : delay_job.CountUsers,
 	}
 
 	if err :=  server.RegisterTasks(tasks); err != nil {

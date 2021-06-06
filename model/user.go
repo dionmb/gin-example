@@ -1,6 +1,6 @@
-package models
+package model
 
-import "gin_example/libs/auth"
+import "gin_example/lib/auth"
 
 type User struct {
 	BaseModel

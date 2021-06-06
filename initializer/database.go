@@ -1,8 +1,8 @@
-package initializers
+package initializer
 
 import (
 	"fmt"
-	"gin_example/libs/configurations"
+	"gin_example/lib/configuration"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,7 +18,7 @@ type databaseConfig struct {
 
 func loadDatabaseConfig() databaseConfig {
 	var config databaseConfig
-	configurations.LoadConfig("database", &config)
+	configuration.LoadConfig("database", &config)
 	return config
 }
 

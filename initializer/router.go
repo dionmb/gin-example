@@ -1,9 +1,9 @@
-package initializers
+package initializer
 
 import (
-	"gin_example/handlers"
-	"gin_example/handlers/api"
-	"gin_example/libs/auth"
+	"gin_example/controller"
+	"gin_example/controller/api"
+	"gin_example/lib/auth"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,8 +15,8 @@ func Route(app *gin.Engine)  {
 	{
 		apiGroup.POST("/login", api.Login)
 
-		apiGroup.POST("/delays", api.DelaysCreate)
-		apiGroup.GET("/delays/:id", api.DelaysShow)
+		apiGroup.POST("/delay_job", api.DelaysCreate)
+		apiGroup.GET("/delay_job/:id", api.DelaysShow)
 
 		apiGroup.GET("/repos", api.ReposIndex)
 		apiGroup.POST("/repos", api.ReposCreate)

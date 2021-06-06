@@ -2,7 +2,7 @@ package api
 
 import (
 	"gin_example/app"
-	"gin_example/models"
+	"gin_example/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -20,8 +20,8 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	var user models.User
-	err := app.DB.Where(models.User{
+	var user model.User
+	err := app.DB.Where(model.User{
 		Username:       req.Username,
 	}).First(&user).Error
 

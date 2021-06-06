@@ -1,11 +1,11 @@
 package main
 
-import "gin_example/initializers"
+import "gin_example/initializer"
 
 func main()  {
-	initializers.Application()
+	initializer.Application()
 
-	worker := initializers.MachineryWorker()
+	worker := initializer.MachineryWorker()
 
 	worker.Launch()
 }

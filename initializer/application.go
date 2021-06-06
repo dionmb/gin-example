@@ -1,9 +1,9 @@
-package initializers
+package initializer
 
 import (
 	"gin_example/app"
-	"gin_example/libs/configurations"
-	"gin_example/models"
+	"gin_example/lib/configuration"
+	"gin_example/model"
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"path"
@@ -12,7 +12,7 @@ import (
 
 func loadApplicationConfig() app.ApplicationConfig {
 	var config app.ApplicationConfig
-	configurations.LoadConfig("application", &config)
+	configuration.LoadConfig("application", &config)
 	return config
 }
 
@@ -42,5 +42,5 @@ func setup() {
 	app.Root = path.Join(path.Dir(filename), "..")
 	app.Config = loadApplicationConfig()
 
-	app.DB = Database(models.Repo{}, models.User{}, models.Dashboard{})
+	app.DB = Database(model.Repo{}, model.User{}, model.Dashboard{})
 }

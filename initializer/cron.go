@@ -1,8 +1,8 @@
-package initializers
+package initializer
 
 import (
 	"gin_example/app"
-	"gin_example/crons"
+	"gin_example/job/cron_job"
 	"github.com/robfig/cron/v3"
 )
 
@@ -12,6 +12,6 @@ func Cron()  {
 	}
 
 	c := cron.New(cron.WithSeconds())
-	c.AddFunc("1 * * * * *", crons.CountUsers)
+	c.AddFunc("1 * * * * *", cron_job.CountUsers)
 	c.Start()
 }

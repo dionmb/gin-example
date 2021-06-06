@@ -2,13 +2,13 @@ package api
 
 import (
 	"gin_example/app"
-	"gin_example/models"
+	"gin_example/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func ReposIndex(c *gin.Context)  {
-	var repos []models.Repo
+	var repos []model.Repo
 
 	if err := app.DB.Find(&repos).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Record Not Found"})
@@ -20,7 +20,7 @@ func ReposIndex(c *gin.Context)  {
 
 func ReposShow(c *gin.Context)  {
 	id := c.Param("id")
-	var repo models.Repo
+	var repo model.Repo
 
 	if err := app.DB.Where("id = ?", id).First(&repo).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Record Not Found"})
@@ -31,7 +31,7 @@ func ReposShow(c *gin.Context)  {
 }
 
 func ReposCreate(c *gin.Context)  {
-	var repo models.Repo
+	var repo model.Repo
 
 	if err := c.ShouldBindJSON(&repo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Params Invalid"})
@@ -48,7 +48,7 @@ func ReposCreate(c *gin.Context)  {
 
 func ReposUpdate(c *gin.Context)  {
 	id := c.Param("id")
-	var repo models.Repo
+	var repo model.Repo
 
 	if err := app.DB.Where("id = ?", id).Find(&repo).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Record Not Found"})
@@ -70,7 +70,7 @@ func ReposUpdate(c *gin.Context)  {
 
 func ReposDestroy(c *gin.Context)  {
 	id := c.Param("id")
-	var repo models.Repo
+	var repo model.Repo
 
 	if err := app.DB.Where("id = ?", id).Find(&repo).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Record Not Found"})

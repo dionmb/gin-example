@@ -2,7 +2,7 @@ package tests
 
 import (
 	"gin_example/app"
-	"gin_example/models"
+	"gin_example/model"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -73,7 +73,7 @@ func TestLoginWithIncorrectPassword(t *testing.T) {
 }
 
 func TestProfile(t *testing.T) {
-	var user models.User
+	var user model.User
 	app.DB.Where("activated = true").First(&user)
 
 	res := test.Login(&user).Get("/api/profile")

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"gin_example/initializers"
+	"gin_example/initializer"
 )
 
 func main()  {
-	app := initializers.Application()
+	app := initializer.Application()
 
-	initializers.Cron()
-	initializers.MachineryServer()
+	initializer.Cron()
+	initializer.MachineryServer()
 
 	app.Run()
 }

@@ -1,7 +1,7 @@
 package api
 
 import (
-	"gin_example/handlers"
+	"gin_example/controller"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
