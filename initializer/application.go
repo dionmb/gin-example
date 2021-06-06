@@ -1,6 +1,7 @@
 package initializer
 
 import (
+	"gin_example/adapter"
 	"gin_example/app"
 	"gin_example/lib/configuration"
 	"gin_example/model"
@@ -23,7 +24,7 @@ func Application() *gin.Engine {
 
 	r.Use(cors.Default())
 
-	Route(r)
+	adapter.Route(r)
 
 	return r
 }

@@ -2,9 +2,10 @@ package api
 
 import (
 	"gin_example/app"
+	"gin_example/domain/vo"
+	"gin_example/lib/resp"
 	"gin_example/model"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type loginRequest struct {
@@ -16,7 +17,7 @@ type loginRequest struct {
 func Login(c *gin.Context) {
 	var req loginRequest
 	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Params Invalid"})
+		resp.ParamsInvalid(c, err)
 		return
 	}
 
@@ -26,22 +27,19 @@ func Login(c *gin.Context) {
 	}).First(&user).Error
 
 	if err != nil || !user.VerifyPassword(req.Password) {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Username or Password Invalid"})
+		resp.Unauthorized(c, "Username or Password Invalid")
 		return
 	}
-
-
 
 	token, err := user.GenerateToken()
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": err })
+		resp.Unauthorized(c, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":   200,
-		"token":  token,
+	resp.JSON(c, vo.TokenRes{
+		Token: token,
 		//"expire": expire.Format(time.RFC3339),
 	})
 }

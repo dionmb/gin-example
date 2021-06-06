@@ -1,8 +1,8 @@
-package initializer
+package adapter
 
 import (
-	"gin_example/controller"
-	"gin_example/controller/api"
+	"gin_example/adapter/controller"
+	"gin_example/adapter/controller/api"
 	"gin_example/lib/auth"
 	"github.com/gin-gonic/gin"
 )
